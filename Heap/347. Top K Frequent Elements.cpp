@@ -1,22 +1,55 @@
+// class Solution {
+// public:
+//     vector<int> topKFrequent(vector<int>& nums, int k) {
+//         unordered_map<int, int> m;
+//         for (int i = 0; i < nums.size(); i++) {
+//             m[nums[i]]++;
+//         }
+//         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+//         for (auto it = m.begin(); it != m.end(); it++) {
+//             pq.push({it->second, it->first});
+//             if (pq.size() > k) {
+//                 pq.pop();
+//             }
+//         }
+//         vector<int> result;
+//         while (!pq.empty()) {
+//             result.push_back(pq.top().second);
+//             pq.pop();
+//         }
+//         return result;
+//     }
+// };
+
+// Time: O(n)
+// Space: O(n)
+
 class Solution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> map;
-        vector<int> ans;
-        for(int i = 0; i < nums.size(); i++){
-            map[nums[i]]++;
+        int n = nums.size();
+        
+        unordered_map<int, int> m;
+        for (int i = 0; i < n; i++) {
+            m[nums[i]]++;
         }
         
-        priority_queue<pair<int, int>> pq;
+        vector<vector<int>> buckets(n + 1);
+        for (auto it = m.begin(); it != m.end(); it++) {
+            buckets[it->second].push_back(it->first);
+        }
         
-        for(auto it = map.begin(); it != map.end(); it++){
-            pq.push({it->second, it->first});
-            
-            if(pq.size() > map.size() - k){
-                ans.push_back(pq.top().second);
-                pq.pop();
+        vector<int> result;
+        
+        for (int i = n; i >= 0; i--) {
+            if (result.size() >= k) {
+                break;
+            }
+            if (!buckets[i].empty()) {
+                result.insert(result.end(), buckets[i].begin(), buckets[i].end());
             }
         }
-        return ans;
+        
+        return result;
     }
 };

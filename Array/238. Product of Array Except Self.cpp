@@ -1,3 +1,6 @@
+/*
+O(N) Memory used -
+
 class Solution {
 public:
     vector<int> productExceptSelf(vector<int>& nums) {
@@ -22,3 +25,29 @@ public:
         return ans;
     }
 };
+*/
+
+// O(1) Memory Solution 
+
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int n = nums.size();
+        int leftProd = 1, rightProd = 1;
+        
+        vector<int> ans(n, 1);
+        
+        for(int i = 0; i < n; i++){
+            ans[i] *= leftProd;
+            leftProd *= nums[i];
+        }
+        
+        for(int i = n - 1; i >= 0; i--){
+            ans[i] *= rightProd;
+            rightProd *= nums[i];
+        }
+        
+        return ans;
+    }
+};
+

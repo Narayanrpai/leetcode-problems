@@ -72,3 +72,56 @@ public:
         return ans;
     }
 };
+
+------------------------------------------------------------------------------------------------------------
+Single flow function:
+
+class Solution {
+public:
+    
+    vector<vector<int>> atlantic, pacific, ans;
+    
+    void flow(int i, int j, int n, int m, vector<vector<int>>& vis, vector<vector<int>>& heights){
+        if(vis[i][j]){
+            return;
+        }
+        
+        vis[i][j] = 1;
+        
+        if(pacific[i][j] && atlantic[i][j]){
+            ans.push_back({i, j});
+        }
+        
+        if(i + 1 < m and heights[i + 1][j] >= heights[i][j]){
+            flow(i + 1, j, n, m, vis, heights);
+        }
+        if(i - 1 >= 0 and heights[i - 1][j] >= heights[i][j]){
+            flow(i - 1, j, n, m, vis, heights);
+        }
+        if(j + 1 < n and heights[i][j + 1] >= heights[i][j]){
+            flow(i, j + 1, n, m, vis, heights);
+        }
+        if(j - 1 >= 0 and heights[i][j - 1] >= heights[i][j]){
+            flow(i, j - 1, n, m, vis, heights);
+        }
+    }
+    
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        int m = heights.size(), n = heights[0].size();
+        
+        atlantic.resize(m + 1, vector<int>(n + 1, 0));
+        pacific.resize(m + 1, vector<int>(n + 1, 0));
+    
+        for(int i=0;i<n;i++){
+            flow(0, i, n, m, pacific, heights);
+            flow(m-1, i, n, m, atlantic, heights);
+        }
+        
+        for(int i=0;i<m;i++){
+            flow(i, 0, n, m, pacific, heights);
+            flow(i, n-1, n, m, atlantic, heights);
+        }
+        
+        return ans;
+    }
+};
